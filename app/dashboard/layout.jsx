@@ -1,28 +1,238 @@
-import Link from "next/link"
-import AuthGuard from "@/components/AuthGuard"
+"use client"
 
-export default function DashboardLayout({children}){
-    return(
-      <AuthGuard>
-        <div className="min-h-screen flex">
-          <aside className="w-64 border-r">
-            <div className=" text-xl p-4 font-semibold">
-              HireFlow
+import Link from "next/link"
+import { useEffect, useState } from "react"
+import { usePathname } from "next/navigation"
+
+import AuthGuard from "@/components/AuthGuard"
+import { LayoutDashboard, Briefcase, CreditCard, Menu } from "lucide-react"
+import { Button } from "@/components/ui/button"
+
+export default function DashboardLayout({ children }) {
+
+  const pathname = usePathname()
+  const [user, setUser] = useState(null)
+
+  const [open, setOpen] = useState(false)
+  const [collapsed, setCollapsed] = useState(false)
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user")
+    if (storedUser) {
+      setUser(JSON.parse(storedUser))
+    }
+  }, [])
+
+  const displayName =
+    user?.email?.split("@")[0] || "User"
+
+  const role =
+    user?.role
+      ? user.role.charAt(0) + user.role.slice(1).toLowerCase()
+      : ""
+
+  function handleLogout() {
+    localStorage.removeItem("token")
+    localStorage.removeItem("user")
+    window.location.href = "/login"
+  }
+
+  return (
+    <AuthGuard>
+      {/*PREMIUM BACKGROUND */}
+      <div className="min-h-screen flex relative bg-gradient-to-br from-zinc-100 via-white to-emerald-50/30">
+
+        {/* subtle gradients */}
+        <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 via-transparent to-emerald-400/5 pointer-events-none" />
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-emerald-500/10 blur-3xl rounded-full opacity-40" />
+
+        {/* MOBILE OVERLAY */}
+        {open && (
+          <div
+            onClick={() => setOpen(false)}
+            className="fixed inset-0 bg-black/20 backdrop-blur-sm z-40 md:hidden"
+          />
+        )}
+
+        {/* SIDEBAR */}
+        <aside
+          className={`
+            fixed md:static z-50
+            ${collapsed ? "w-20" : "w-64"} p-4
+            transform transition-all duration-300 ease-in-out
+            ${open ? "translate-x-0" : "-translate-x-full md:translate-x-0"}
+          `}
+        >
+          <div className="
+            sticky top-4
+            h-[calc(100vh-2rem)] rounded-2xl
+            bg-gradient-to-b from-white to-zinc-50/80 
+            backdrop-blur-xl shadow-[0_10px_30px_rgba(0,0,0,0.06)] 
+            border border-zinc-200/60
+            transition-all duration-300 ease-in-out
+            flex flex-col
+          ">
+
+            {/* LOGO */}
+            <div className="px-4 pt-4 pb-6 text-lg font-semibold tracking-tight">
+              {collapsed ? "H" : "HireFlow"}
             </div>
 
-            <nav className="px-4 space-y-2">
-              <Link href="/dashboard" className="block hover:text-blue-600">Dashboard</Link>
-              <Link href="/dashboard/jobs" className="block hover:text-blue-600">Jobs</Link>
-              <Link href="/dashboard/billing" className="block hover:text-blue-600">Billing</Link>
+            {/* NAV */}
+            <nav className="px-2 space-y-1 flex-1 overflow-y-auto">
+
+              {/* ITEM */}
+              <NavItem
+                href="/dashboard"
+                active={pathname === "/dashboard"}
+                icon={<LayoutDashboard size={18} />}
+                label="Dashboard"
+                collapsed={collapsed}
+              />
+
+              <NavItem
+                href="/dashboard/jobs"
+                active={pathname.startsWith("/dashboard/jobs")}
+                icon={<Briefcase size={18} />}
+                label="Jobs"
+                collapsed={collapsed}
+              />
+
+              <NavItem
+                href="/dashboard/billing"
+                active={pathname === "/dashboard/billing"}
+                icon={<CreditCard size={18} />}
+                label="Billing"
+                collapsed={collapsed}
+              />
+
             </nav>
-          </aside>
 
-          <main className="flex-1 p-6">
-            {children}
-          </main>
-       </div>
+            {/* USER */}
+            <div className="mt-auto px-4 py-4">
+              <div className="flex items-center gap-3">
+                <div className="w-9 h-9 rounded-full bg-black text-white flex items-center justify-center text-sm font-medium">
+                  {displayName.charAt(0).toUpperCase()}
+                </div>
 
-      </AuthGuard>
-        
-    )
+                {!collapsed && (
+                  <div className="text-sm">
+                    <p className="font-medium">{displayName}</p>
+                    <p className="text-xs text-muted-foreground">{role}</p>
+                  </div>
+                )}
+              </div>
+
+              {!collapsed && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="w-full mt-4 rounded-xl"
+                  onClick={handleLogout}
+                >
+                  Logout
+                </Button>
+              )}
+            </div>
+
+          </div>
+        </aside>
+
+        {/* MAIN */}
+        <main className="flex-1 flex flex-col px-4 py-4 relative z-10">
+
+          {/* TOPBAR */}
+          <div className="
+            h-16 flex items-center justify-between px-6
+            rounded-2xl mb-4
+            bg-white/80
+            backdrop-blur-xl border border-zinc-200/60 shadow-[0_8px_25px_rgba(0,0,0,0.04)] 
+            transition-all duration-300 ease-in-out
+          ">
+
+            {/* LEFT */}
+            <div className="flex items-center gap-3">
+
+              <button
+                onClick={() => {
+                  if (window.innerWidth < 768) {
+                    setOpen(!open)
+                  } else {
+                    setCollapsed(!collapsed)
+                  }
+                }}
+                className="p-2 rounded-lg hover:bg-muted transition"
+              >
+                <Menu size={20} />
+              </button>
+
+              <div>
+                <p className="text-sm text-muted-foreground">
+                  Welcome back
+                </p>
+                <p className="font-semibold text-lg">
+                  {displayName}
+                </p>
+              </div>
+
+            </div>
+
+            {/* RIGHT */}
+            <Link href="/dashboard/jobs/new">
+              <Button className="rounded-full h-10 px-5 bg-emerald-600 text-white hover:bg-emerald-700 
+              shadow-sm hover:shadow-md transition-all duration-200 ease-in-out">
+                + Create Job
+              </Button>
+            </Link>
+
+          </div>
+
+          {/* CONTENT */}
+          <div className="flex-1 px-6 pb-10 bg-transparent">
+            <div className="max-w-5xl mx-auto w-full">
+              {children}
+            </div>
+          </div>
+
+        </main>
+
+      </div>
+    </AuthGuard>
+  )
+}
+
+/* 🔥 PREMIUM NAV ITEM */
+function NavItem({ href, icon, label, active, collapsed }) {
+  return (
+    <Link
+      href={href}
+      className={`group relative flex items-center gap-3 px-3 py-2 rounded-xl text-sm transition-all duration-200 ease-in-out
+        ${active
+          ? "bg-emerald-500/10 text-emerald-700"
+          : "text-muted-foreground hover:bg-zinc-100"}
+      `}
+    >
+
+      {/* active indicator */}
+      {active && (
+        <span className="absolute left-0 top-1/2 -translate-y-1/2 h-5 w-1 bg-emerald-500 rounded-r-full" />
+      )}
+
+      {icon}
+
+      {!collapsed && label}
+
+      {/* tooltip */}
+      {collapsed && (
+        <span className="
+          absolute left-full ml-3 px-2 py-1 text-xs rounded-md
+          bg-black text-white opacity-0 group-hover:opacity-100
+          transition pointer-events-none whitespace-nowrap
+        ">
+          {label}
+        </span>
+      )}
+
+    </Link>
+  )
 }

@@ -1,186 +1,242 @@
-"use client";
+"use client"
 
-import { useEffect, useState } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useState, useEffect } from "react"
+import { useParams, useRouter } from "next/navigation"
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
+
+import { fetcher } from "@/lib/fetcher"
+import { getCandidateById } from "@/lib/api/candidates.api"
+
+import { toast } from "sonner"
+
 import {
-  getCandidateById,
-  updateCandidate,
-} from "@/lib/api/candidates.api";
-import {downloadResume, deleteResume} from "@/lib/api/resumes.api.js"
-import ScoreBadge from "@/app/components/ScoreBadge";
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle
+} from "@/components/ui/card"
 
-export default function EditCandidatePage(){
-    const {id:jobId, candidateId} = useParams()
-    const router = useRouter()
+import { Input } from "@/components/ui/input"
+import { Button } from "@/components/ui/button"
 
-    const [loading, setLoading]= useState(true)
-    const [resumes, setResumes] = useState([]);
+export default function EditCandidatePage() {
+  const { id: jobId, candidateId } = useParams()
+  const router = useRouter()
+  const queryClient = useQueryClient()
 
-    const [form, setForm]= useState({
-        name:"",
-        email:"",
-        phone:"",
-        status:"",
-        
-    })
-    async function loadCandidate(){
-            try{
-                const data = await getCandidateById(candidateId)
-                setForm({
-                    name: data.name ?? "",
-                    email: data.email ?? "",
-                    phone: data.phone ?? "",
-                    status: data.status ?? "",
-                    
-                })
-                setResumes(data.resumes ?? [])
-            }catch(err){
-                console.error("Failed to load candidate", err)                                
-            }finally{
-                setLoading(false)
-            }
+  const [name, setName] = useState("")
+  const [email, setEmail] = useState("")
+  const [phone, setPhone] = useState("")
+
+  // Fetch candidate
+  const { data: candidate, isLoading, isError } = useQuery({
+    queryKey: ["candidate", candidateId],
+    queryFn: () => getCandidateById(candidateId)
+  })
+
+  // Fill form
+  useEffect(() => {
+    if (candidate) {
+      setName(candidate.name || "")
+      setEmail(candidate.email || "")
+      setPhone(candidate.phone || "")
     }
+  }, [candidate])
 
-    useEffect(()=>{    
-        if(candidateId) loadCandidate()
-    },[candidateId])
+  // Update mutation
+  const updateMutation = useMutation({
+    mutationFn: async () =>
+      fetcher(`/candidates/${candidateId}`, {
+        method: "PATCH",
+        body: JSON.stringify({ name, email, phone })
+      }),
 
+    onSuccess: () => {
+      toast.success("Candidate updated")
 
-    function handleChange(e) {
-    setForm({ ...form, [e.target.name]: e.target.value })
+      queryClient.invalidateQueries(["candidate", candidateId])
+      queryClient.invalidateQueries(["candidates", jobId])
+
+      router.push(`/dashboard/jobs/${jobId}/candidates/${candidateId}`)
+    },
+
+    onError: () => {
+      toast.error("Failed to update candidate")
     }
+  })
 
-    async function handleSubmit(e){
-        e.preventDefault()
-        try{
-            await updateCandidate(candidateId,form)
-            router.push(`/dashboard/jobs/${jobId}/candidates`)
-        }catch(err){
-            console.error("Update failed", err)
-            alert("Update failed")
-        }
-    }
-    if(loading) return <p>Loading...</p>
+  // ✅ DIRTY STATE (ADD HERE)
+  const isDirty =
+    name !== (candidate?.name || "") ||
+    email !== (candidate?.email || "") ||
+    phone !== (candidate?.phone || "")
 
-    async function handleDeleteResume(resumeId) {
-        if (!confirm("Delete this resume?")) return;
+  function handleSubmit(e) {
+    e.preventDefault()
+    updateMutation.mutate()
+  }
 
-        try {
-            await deleteResume(resumeId);
-            await loadCandidate(); // ✅ refresh candidate + resume history
-        } catch (err) {
-            console.error(err);
-            alert("Failed to delete resume");
-        }
-   }
-
-  
+  if (isLoading) return <div className="p-6">Loading...</div>
+  if (isError) return <div className="p-6 text-red-500">Failed to load candidate</div>
 
   return (
+    <main className="max-w-2xl mx-auto p-6 space-y-6 bg-gradient-to-b from-zinc-50 to-white min-h-screen">
 
-    <>
-    <form onSubmit={handleSubmit} className="space-y-4 max-w-md">
-      <h1 className="text-xl font-semibold">Edit Candidate</h1>
-
-      <input
-        name="name"
-        value={form.name}
-        onChange={handleChange}
-        className="border p-2 w-full"
-        placeholder="Name"
-      />
-
-      <input
-        name="email"
-        value={form.email}
-        onChange={handleChange}
-        className="border p-2 w-full"
-        placeholder="Email"
-      />
-
-      <input
-        name="phone"
-        value={form.phone}
-        onChange={handleChange}
-        className="border p-2 w-full"
-        placeholder="Phone"
-      />
-
-      <select
-        name="status"
-        value={form.status}
-        onChange={handleChange}
-        className="border p-2 w-full"
+      {/* BACK */}
+      <button
+        onClick={() => router.back()}
+        className="text-xs text-muted-foreground hover:text-foreground transition"
       >
-        <option value="">Select status</option>
-        <option value="APPLIED">Applied</option>
-        <option value="INTERVIEW">Interview</option>
-        <option value="OFFER">Offer</option>
-        <option value="REJECTED">Rejected</option>
-      </select>
-
-     
-
-      <button className="bg-black text-white px-4 py-2">
-        Update Candidate
+        ← Back to Candidates
       </button>
-    </form>
 
-    <hr className="my-6" />
+      {/* HEADER */}
+      <div className="space-y-1">
+        <p className="text-xs text-muted-foreground">
+          Jobs / Candidates / Edit
+        </p>
 
-    <h2 className="text-lg font-medium">Resume History</h2>
+        <h1 className="text-2xl font-semibold tracking-tight">
+          Edit Candidate
+        </h1>
 
-    {resumes.length === 0 && (
-    <p className="text-sm text-gray-500">
-        No resumes uploaded yet
-    </p>
-    )}
+        <p className="text-sm text-muted-foreground">
+          Update candidate information
+        </p>
+      </div>
 
-    <div className="space-y-3">
-    {resumes.map((r) => (
-        <div
-        key={r.id}
-        className="border p-3 rounded flex justify-between items-start"
-        >
-        <div>
-            <p className="font-medium">{r.originalName}</p>
-            <p className="text-sm text-gray-600">
-            Uploaded: {new Date(r.createdAt).toLocaleString()}
-            </p>
-            <p className="text-sm">
-            Status: {r.parseStatus}
-            </p>
-        </div>
-        
+      {/* CARD */}
+      <Card className="rounded-2xl border border-zinc-200/80 shadow-lg bg-white overflow-hidden">
 
-        <div className="flex flex-column items-end gap-2">
-            {r.parseStatus === "COMPLETED" ? (
-                <ScoreBadge  score={r.confidenceScore}/>
-            ): (
-                <span className="text-sm italic text-gray-500">
-                    Processing...
-                </span>
-            )}
-            <button
-                onClick={() => downloadResume(r.id)}
-                className="flex items-center gap-1 text-sm text-blue-600 hover:text-blue-800 hover:bg-blue-50 px-2 py-1 rounded transition"
-            >
-                ⬇️ Download
-            </button>
+        <CardHeader className="flex flex-row items-center gap-3 pb-3 border-b border-zinc-100">
 
-            <button
-                onClick={()=> handleDeleteResume(r.id)}
-                className="flex items-center gap-1 text-sm text-blue-600 hover:text-blue-800 hover:bg-blue-50 px-2 py-1 rounded transition"
-            >
-                Delete
-            </button>
-        </div>
-        </div>
-    ))}
-    </div>
-    
-    </>
-    
+          {/* Avatar */}
+          <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-100 to-purple-100 flex items-center justify-center text-sm font-semibold text-gray-700 shadow-sm">
+            {name ? name[0].toUpperCase() : "?"}
+          </div>
 
-  );
+          <div className="flex items-center gap-2">
+            <div>
+              <CardTitle className="text-base font-medium">
+                Candidate Information
+              </CardTitle>
+              <p className="text-xs text-muted-foreground">
+                Edit basic details
+              </p>
+            </div>
+
+            <span className="text-xs bg-yellow-50 text-yellow-700 px-2 py-0.5 rounded-full border border-yellow-200">
+              Editing
+            </span>
+          </div>
+
+        </CardHeader>
+
+        <CardContent>
+
+          <form onSubmit={handleSubmit} className="space-y-5">
+
+            {/* NAME */}
+            <div className="space-y-1.5">
+              <label className="text-xs font-medium text-muted-foreground">
+                Name
+              </label>
+
+              <Input
+                autoFocus
+                placeholder="Enter name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                required
+                className=" h-10 
+                bg-white 
+                border border-zinc-200 
+                rounded-lg
+                focus-visible:ring-2 focus-visible:ring-black/10
+                focus-visible:border-zinc-400
+                transition"
+              />
+            </div>
+
+            {/* EMAIL */}
+            <div className="space-y-1.5">
+              <label className="text-xs font-medium text-muted-foreground">
+                Email
+              </label>
+
+              <Input
+                type="email"
+                placeholder="Enter email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                className=" h-10 
+                bg-white 
+                border border-zinc-200 
+                rounded-lg
+                focus-visible:ring-2 focus-visible:ring-black/10
+                focus-visible:border-zinc-400
+                transition"
+              />
+            </div>
+
+            {/* PHONE */}
+            <div className="space-y-1.5">
+              <label className="text-xs font-medium text-muted-foreground">
+                Phone
+              </label>
+
+              <Input
+                placeholder="Enter phone"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                className=" h-10 
+                bg-white 
+                border border-zinc-200 
+                rounded-lg
+                focus-visible:ring-2 focus-visible:ring-black/10
+                focus-visible:border-zinc-400
+                transition"
+              />
+            </div>
+
+            {/* ACTIONS */}
+            <div className="flex items-center justify-between pt-4 ">
+
+              <button
+                type="button"
+                onClick={() => router.back()}
+                className="text-sm text-zinc-500 hover:text-zinc-900 transition"
+              >
+                Cancel
+              </button>
+
+              <Button
+                type="submit"
+                disabled={updateMutation.isPending || !isDirty}
+                className="min-w-[160px] 
+                rounded-full 
+                shadow-sm 
+                bg-emerald-600 
+                text-white 
+                hover:bg-emerald-700 
+                hover:shadow-md
+                active:scale-[0.98]
+                transition-all"
+              >
+                {updateMutation.isPending
+                  ? "Updating..."
+                  : "Save Changes"}
+              </Button>
+
+            </div>
+
+          </form>
+
+        </CardContent>
+
+      </Card>
+
+    </main>
+  )
 }
