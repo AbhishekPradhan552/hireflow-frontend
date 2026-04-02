@@ -26,6 +26,7 @@ import {
 
 import ScoreBadge from "@/components/ScoreBadge"
 import { toast } from "sonner"
+import { uploadResume } from "@/lib/uploadResume";
 
 export default function CandidateDetailPage() {
 
@@ -81,17 +82,10 @@ export default function CandidateDetailPage() {
 
   const uploadMutation = useMutation({
     mutationFn: async () => {
-
-      const formData = new FormData()
-      formData.append("resume", file)
-
-      const resume = await fetcher(`/candidates/${candidateId}/resumes`, {
-        method: "POST",
-        body: formData,
-        headers: {}
-      })
-
-      return resume
+        return await uploadResume({
+            file,
+            candidateId,
+        });      
     },
 
     onSuccess: (resume) => {

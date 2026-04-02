@@ -4,7 +4,7 @@ import { useState, useRef } from "react"
 import { useParams } from "next/navigation"
 import { useQuery, useMutation } from "@tanstack/react-query"
 
-import { applyToJob, getPublicJob } from "@/lib/api/public.api"
+
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -13,6 +13,13 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
 import { Skeleton } from "@/components/ui/skeleton"
+import {
+  applyToJob,
+  getPublicJob,
+  getPresignedUrl,
+  savePublicResume,
+} from "@/lib/api/public.api";
+
 
 export default function ApplyPage() {
   const params = useParams()
@@ -43,33 +50,62 @@ console.log("🧪 jobId:", jobId, "type:", typeof jobId)
   
   // ---------------- MUTATION ----------------
 const mutation = useMutation({
-  mutationFn: async (formData) => {
-    console.log("🚀 sending formData:", [...formData.entries()])
-
-    setProgress(10)
+  mutationFn: async () => {
+    setProgress(10);
 
     const interval = setInterval(() => {
-      setProgress((p) => (p < 90 ? p + 8 : p))
-    }, 200)
+      setProgress((p) => (p < 90 ? p + 8 : p));
+    }, 200);
 
     try {
-      const res = await applyToJob(jobId, formData)
+      // 1. create candidate
+      const candidate = await applyToJob(jobId, {
+        name,
+        email,
+        phone,
+      });
 
-      console.log("✅ API response:", res)
+      console.log("✅ candidate created:", candidate);
 
-      setProgress(100)
+      // 2. get presigned URL
+      const { uploadUrl, key } = await getPresignedUrl({
+        fileName: file.name,
+        fileType: file.type,
+        jobId,
+      });
 
-      // small delay → smoother UX
-      await new Promise((r) => setTimeout(r, 300))
+      // 3. upload to S3 directly
+      await fetch(uploadUrl, {
+        method: "PUT",
+        headers: {
+          "Content-Type": file.type,
+        },
+        body: file,
+      });
 
-      return res
+      // 4. save resume in DB
+      await savePublicResume({
+        candidateId: candidate.candidateId, // IMPORTANT FIX
+        orgId: candidate.orgId,
+        key,
+        originalName: file.name,
+        mimeType: file.type,
+        fileSize: file.size,
+      });
+
+      setProgress(100);
+
+      await new Promise((r) => setTimeout(r, 300));
+
+      return candidate;
     } catch (err) {
-      console.error("❌ mutation failed:", err)
-      throw err
+      console.error("❌ mutation failed:", err);
+      throw err;
     } finally {
-      clearInterval(interval)
+      clearInterval(interval);
     }
   },
+ 
 
   onSuccess: () => {
     console.log("🎉 success triggered")
@@ -112,13 +148,8 @@ function handleSubmit(e) {
 
   console.log("📦 file being sent:", file)
 
-  const formData = new FormData()
-  formData.append("name", name)
-  formData.append("email", email)
-  formData.append("phone", phone || "") // ✅ FIX (avoid undefined)
-  formData.append("resume", file) // ✅ CRITICAL
-
-  mutation.mutate(formData)
+  
+  mutation.mutate()
 }
 
   // ---------------- STATES ----------------
