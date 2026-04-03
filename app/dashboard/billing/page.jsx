@@ -104,7 +104,7 @@ export default function BillingPage() {
   return (
   <div className="
     relative
-    p-6 space-y-8 max-w-5xl
+    px-3 sm:px-6 py-4 sm:py-6 space-y-8 max-w-5xl
 
     bg-gradient-to-b from-white to-zinc-50
     rounded-3xl
@@ -119,7 +119,7 @@ export default function BillingPage() {
     <div className="absolute -bottom-20 -right-20 w-72 h-72 bg-blue-400/20 blur-3xl rounded-full pointer-events-none" />
 
     {/* HEADER */}
-    <div className="flex items-center justify-between">
+    <div className="flex flex-col sm:flex-row gap-3 sm:gap-0 sm:items-center sm:justify-between">
 
       {/* LEFT */}
       <div className="space-y-1">
@@ -140,7 +140,7 @@ export default function BillingPage() {
 
       {/* RIGHT BADGE */}
       <div className="
-        hidden md:flex items-center gap-2
+        flex sm:hidden mt-2 items-center gap-2
         px-3 py-1.5 rounded-full
 
        bg-emerald-50
@@ -162,10 +162,10 @@ export default function BillingPage() {
     border border-white/40
     shadow-sm
 
-    grid md:grid-cols-2 gap-5">
+    grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
 
       {/* CURRENT PLAN */}
-      <Card className="relative overflow-hidden rounded-2xl p-6 bg-gradient-to-br from-emerald-500/10 via-emerald-500/5 to-transparent shadow-sm border-none">
+      <Card className="relative overflow-hidden rounded-2xl p-4 sm:p-6 bg-gradient-to-br from-emerald-500/10 via-emerald-500/5 to-transparent shadow-sm border-none">
         <div className="absolute -top-10 -right-10 w-32 h-32 bg-emerald-500/20 blur-3xl rounded-full" />
 
         <p className="text-xs text-muted-foreground uppercase tracking-wide">
@@ -237,7 +237,7 @@ export default function BillingPage() {
     border border-white/40
     shadow-sm
 
-    grid md:grid-cols-3 gap-5">
+    grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-5">
       {plans.map((plan) => {
         const isPopular = plan.name === "PRO";
         const action = getAction(plan.name);
@@ -245,7 +245,7 @@ export default function BillingPage() {
         return (
           <Card
             key={plan.name}
-            className={`rounded-2xl p-6 transition-all duration-300 shadow-sm hover:shadow-lg border-none
+            className={`rounded-2xl p-4 sm:p-6 transition-all duration-300 shadow-sm hover:shadow-lg border-none
             ${
               plan.name === "FREE"
                 ? "bg-gradient-to-br from-muted/40 to-muted/10"
@@ -286,7 +286,7 @@ export default function BillingPage() {
                 {plan.limit}
               </p>
 
-              <div className="mt-5">
+              <div className="mt-4 sm:mt-5">
                 {action === "current" && (
                   <Button
                     disabled
@@ -343,7 +343,7 @@ export default function BillingPage() {
       <Button
         variant="ghost"
         onClick={() => cancelMutation.mutate()}
-        className="text-sm text-muted-foreground hover:text-red-500"
+        className="text-sm w-full sm:w-auto text-muted-foreground hover:text-red-500 text-muted-foreground hover:text-red-500"
       >
         Cancel subscription
       </Button>

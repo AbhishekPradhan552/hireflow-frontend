@@ -92,11 +92,15 @@ export default function CandidatesPage() {
   if (error) return <p className="p-6">Failed to load candidates</p>;
 
   return (
-   <div className="p-6 space-y-6 max-w-7xl mx-auto bg-gradient-to-b from-zinc-50 to-white dark:from-zinc-900 dark:to-zinc-950 min-h-screen">
+   <div className="px-3 sm:px-6 py-4 sm:py-6 space-y-6 max-w-7xl mx-auto bg-gradient-to-b from-zinc-50 to-white dark:from-zinc-900 dark:to-zinc-950 min-h-screen">
 
   {/* HEADER */}
-  <div className="flex items-center justify-between rounded-2xl px-6 py-5 
-    bg-white/70 backdrop-blur-md border border-zinc-200/60 shadow-sm">
+  <div className="flex flex-col sm:flex-row
+  gap-4 sm:gap-0
+  sm:items-center sm:justify-between
+  rounded-2xl px-4 sm:px-6 py-4 sm:py-5
+  bg-white/70 backdrop-blur-md border border-zinc-200/60 shadow-sm 
+  ">
 
     <div>
       <h1 className="text-2xl font-semibold tracking-tight text-zinc-900">
@@ -107,7 +111,7 @@ export default function CandidatesPage() {
       </p>
     </div>
 
-    <div className="flex items-center gap-3">
+    <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 w-full sm:w-auto">
       <SearchInput
         value={search}
         onChange={(val) => {
@@ -116,7 +120,7 @@ export default function CandidatesPage() {
         }}
         placeholder="Search by name or email..."
         debounce={400}
-        className="w-[260px] h-10 rounded-full bg-white/80 border border-zinc-200 backdrop-blur-sm focus:ring-2 focus:ring-black/5"
+        className="w-full sm:w-[260px] h-10 rounded-full bg-white/80 border border-zinc-200 backdrop-blur-sm focus:ring-2 focus:ring-black/5"
       />
 
       <Link href={`/dashboard/jobs/${id}/pipeline`}>
@@ -187,7 +191,8 @@ export default function CandidatesPage() {
           </div>
 
           <div className="relative">
-            <Table>
+            <div className="overflow-x-auto">
+              <Table>
               <TableHeader>
                 <TableRow className="bg-zinc-100 border-b border-zinc-200 ">
                   <TableHead className="p-4 text-xs font-semibold text-zinc-500 uppercase">
@@ -330,6 +335,8 @@ export default function CandidatesPage() {
                 ))}
               </TableBody>
             </Table>
+            </div>
+            
 
             {isFetching && (
               <div className="absolute inset-0 pointer-events-none">

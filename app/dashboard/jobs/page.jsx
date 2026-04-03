@@ -114,14 +114,16 @@ export default function JobsPage() {
   }
 
   return (
-    <main className="p-6 space-y-8 max-w-6xl mx-auto">
-
+    <main className="w-full px-3 sm:px-6 py-4 space-y-6 sm:space-y-8 max-w-6xl mx-auto">
       {/* HEADER */}
-      <div className="flex items-center justify-between
-      bg-white/60 backdrop-blur-xl 
-      border border-zinc-200/50 
-      rounded-2xl px-4 py-3 
-      shadow-[0_8px_25px_rgba(0,0,0,0.04)]
+      <div className="
+        flex flex-col sm:flex-row
+        gap-3 sm:gap-4
+        sm:items-center sm:justify-between
+        bg-white/60 backdrop-blur-xl 
+        border border-zinc-200/50 
+        rounded-2xl px-3 sm:px-4 py-3 
+        shadow-[0_8px_25px_rgba(0,0,0,0.04)]
       ">
 
         <div>
@@ -131,8 +133,7 @@ export default function JobsPage() {
           </p>
         </div>
 
-        <div className="flex items-center gap-3">
-
+        <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 w-full sm:w-auto sm:items-center">
             {/*SEARCH */}
             <SearchInput
                 value={search}
@@ -142,7 +143,7 @@ export default function JobsPage() {
                 }}
                 debounce={400}
                 placeholder ="Search jobs..."
-                className= "w-[240px] bg-white/70 border border-zinc-200/60 backdrop-blur-sm rounded-full"
+                className= "w-full sm:w-[240px] h-10 text-sm bg-white/70 border border-zinc-200/60 backdrop-blur-sm rounded-full"
             />    
 
           {/* FILTER */}
@@ -155,7 +156,7 @@ export default function JobsPage() {
           >
             <SelectTrigger
               className="
-                w-[150px] h-10
+                w-full sm:w-[150px] h-10
                 rounded-full 
                 bg-white/70 backdrop-blur-md
                 border border-zinc-200/60
@@ -226,7 +227,7 @@ export default function JobsPage() {
           {can(user,"job:create") && (
 
             <Link href="/dashboard/jobs/new">
-              <Button className="rounded-full px-5 
+              <Button className="w-full sm:w-auto rounded-full px-4 sm:px-5 text-sm  
               bg-emerald-50/60 backdrop-blur 
               text-emerald-700 
               border border-emerald-200/60 
@@ -288,11 +289,11 @@ export default function JobsPage() {
           border border-zinc-200/60 
           shadow-[0_12px_35px_rgba(0,0,0,0.06)]">
 
-          <CardContent className="p-4 space-y-3">
+          <CardContent className="p-3 sm:p-4 space-y-3">
 
             {/* HEADER (FIXED ALIGNMENT) */}
             <div className="
-              grid grid-cols-[2fr_1fr_1fr]
+              hidden md:grid grid-cols-[2fr_1fr_1fr]
               px-6 pb-2
               text-xs uppercase tracking-wide text-muted-foreground
             ">
@@ -301,8 +302,10 @@ export default function JobsPage() {
               <div className="text-right">Actions</div>
             </div>
 
-            {/* ROWS */}
-            <div className="space-y-3">
+            {/* DESKTOP TABLE */}
+            <div className="block">
+              {/* existing Card + table stays SAME */}
+              <div className="space-y-3">
 
               {jobs.map((job) => (
                 <div
@@ -315,10 +318,15 @@ export default function JobsPage() {
 
                     transition-all duration-200 ease-out
 
-                    hover:shadow-[0_12px_30px_rgba(0,0,0,0.08)]
-                    hover:-translate-y-[2px]
-                    hover:scale-[1.01]
+                    shadow-[0_4px_14px_rgba(0,0,0,0.04)]
+                    sm:hover:shadow-[0_12px_30px_rgba(0,0,0,0.08)]
+                    sm:hover:-translate-y-[2px]
+                    sm:hover:scale-[1.01]
                     hover:border-zinc-300
+
+                    active:scale-[0.98]
+                    active:shadow-md
+
 
                     ${job.status === "CLOSED" ? "opacity-60" : ""}
                   `}
@@ -331,7 +339,12 @@ export default function JobsPage() {
                   `} />
 
                   {/* GRID */}
-                  <div className="grid grid-cols-[2fr_1fr_1fr] items-center px-6 py-5">
+                  <div className="
+                    grid grid-cols-1 md:grid-cols-[2fr_1fr_1fr]
+                    gap-3 md:gap-0
+                    items-start md:items-center
+                    px-4 md:px-6 py-4 md:py-5
+                  ">
 
                     {/* ROLE */}
                     <div className="space-y-1.5 pr-4">
@@ -374,9 +387,10 @@ export default function JobsPage() {
                     {/* ACTIONS */}
                     <div
                       className="
-                        flex justify-end gap-4 text-sm
-                        opacity-0 translate-x-2
-                        group-hover:opacity-100 group-hover:translate-x-0
+                        flex justify-start md:justify-end gap-4 text-sm
+                        opacity-100 sm:opacity-0
+                        translate-x-0 sm:translate-x-2
+                        sm:group-hover:opacity-100 sm:group-hover:translate-x-0
                         transition-all duration-200
                       "
                       onClick={(e) => e.stopPropagation()}
@@ -426,14 +440,21 @@ export default function JobsPage() {
               ))}
 
             </div>
+            </div>
+
+            
+            
 
           </CardContent>
         </Card>
       )}
       {/* PAGINATION */}
       {meta && meta.totalPages > 1 && (
-        <div className="flex justify-between items-center">
-
+        <div className="
+          mt-4 sm:mt-6
+          flex flex-col sm:flex-row gap-3 sm:gap-0
+          justify-between items-center
+        ">
           <Button
             variant="outline"
             disabled={page === 1}
@@ -442,7 +463,7 @@ export default function JobsPage() {
             Prev
           </Button>
 
-          <div className="flex gap-2">
+          <div className="flex gap-2 flex-wrap justify-center">
             {[...Array(meta.totalPages)]
               .slice(0, 5)
               .map((_, i) => (

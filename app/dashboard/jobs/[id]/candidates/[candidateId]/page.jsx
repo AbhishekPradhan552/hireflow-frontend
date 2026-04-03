@@ -152,14 +152,19 @@ export default function CandidateDetailPage() {
   }
 
   
-// ONLY showing UI return part (keep your logic same)
+
 
   return (
-    <div className="p-6 max-w-5xl space-y-6 bg-gradient-to-b from-emerald-50 via-emerald-50/30 to-white min-h-screen">
+    <div className="px-3 sm:px-6 py-4 sm:py-6 max-w-5xl space-y-6 bg-gradient-to-b from-emerald-50 via-emerald-50/30 to-white min-h-screen">
 
         
         {/* HEADER */}
-        <div className="flex justify-between items-center px-1 py-2">
+        <div className="
+        flex flex-col sm:flex-row
+        gap-4 sm:gap-0
+        sm:justify-between sm:items-center
+        px-1 py-2
+        ">
 
         {/* LEFT */}
         <div className="flex items-center gap-3">
@@ -196,7 +201,7 @@ export default function CandidateDetailPage() {
         </div>
 
         {/* RIGHT */}
-        <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center gap-2 sm:gap-3">
 
             {/* STATUS */}
             <Select
@@ -205,7 +210,7 @@ export default function CandidateDetailPage() {
             >
             <SelectTrigger
                 className="
-                w-[170px] h-9 
+                w-full sm:w-[170px] h-9 
                 rounded-full 
                 bg-white 
                 border border-zinc-200 
@@ -242,7 +247,7 @@ export default function CandidateDetailPage() {
         <Card className="rounded-2xl border border-zinc-200 shadow-md bg-white hover:shadow-lg transition">
             <CardContent className="p-6">
 
-                <div className="grid grid-cols-2 gap-8">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-8">
 
                 {/* EMAIL */}
                 <div className="space-y-1">
@@ -278,8 +283,7 @@ export default function CandidateDetailPage() {
             ">
 
             {/* HEADER */}
-            <CardHeader className="flex flex-row items-center justify-between pb-4">
-
+            <CardHeader className="flex flex-col sm:flex-row gap-3 sm:gap-0 sm:items-center sm:justify-between pb-4">
                 <div className="flex items-center gap-2">
 
                 <CardTitle className="flex items-center gap-2 text-base font-semibold text-zinc-900">
@@ -409,7 +413,7 @@ export default function CandidateDetailPage() {
   <CardContent className="p-5 space-y-4">
 
     {/* HEADER */}
-    <div className="flex items-center justify-between">
+    <div className="flex flex-col sm:flex-row gap-2 sm:gap-0 sm:items-center sm:justify-between">
       <p className="text-sm font-medium text-zinc-900">Resumes</p>
       <span className="text-xs text-zinc-500">
         {candidate.resumes.length} total
@@ -473,7 +477,7 @@ export default function CandidateDetailPage() {
               key={resume.id}
               onClick={() => setSelectedResumeId(resume.id)}
               className={`
-                flex justify-between items-center px-4 py-3
+                flex flex-col sm:flex-row gap-3 sm:gap-0 sm:justify-between sm:items-center px-4 py-3
                 cursor-pointer transition-all duration-200
                 hover:translate-y-[-1px]
 
@@ -485,7 +489,7 @@ export default function CandidateDetailPage() {
               `}
             >
 
-              <div className="flex items-center gap-3 min-w-0">
+              <div className="flex items-start sm:items-center gap-3 min-w-0">
 
                 <span className="text-zinc-400 text-lg">📄</span>
 
@@ -607,7 +611,7 @@ export default function CandidateDetailPage() {
             />
 
             {/* BUTTONS */}
-            <div className="flex items-center justify-center gap-3">
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
 
             <Button
                 variant="outline"
@@ -642,7 +646,7 @@ export default function CandidateDetailPage() {
 
         
         {/* ACTIONS */}
-        <div className="flex items-center justify-between pt-6">
+        <div className="flex flex-col sm:flex-row gap-3 sm:gap-0 items-center justify-between pt-6">
 
         <Button
             variant="outline"

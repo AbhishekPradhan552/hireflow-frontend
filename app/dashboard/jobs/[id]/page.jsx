@@ -70,7 +70,7 @@ export default function JobDetailPage() {
   if (isError || !job) return <p className="p-6">Job not found</p>
 
   return (
-    <div className="max-w-6xl mx-auto p-6 space-y-8">
+    <div className="max-w-6xl mx-auto px-3 sm:px-6 py-4 sm:py-6 space-y-6 sm:space-y-8">
 
         {/* HEADER */}
         <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-6 pb-2">
@@ -98,7 +98,7 @@ export default function JobDetailPage() {
         </div>
 
         {/* ACTIONS */}
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap gap-2 sm:gap-3">
 
             <Link href={`/dashboard/jobs/${id}/candidates`}>
             <Button className="rounded-full px-4 bg-emerald-600 text-white hover:bg-emerald-700 shadow-sm hover:shadow-md transition">
@@ -124,7 +124,7 @@ export default function JobDetailPage() {
 
         {/* STATS */}
         {stats && (
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3 sm:gap-4">
             {[
             { label: "Candidates", value: stats.totalCandidates },
             { label: "Parsed", value: stats.parsedResumes },
@@ -154,7 +154,7 @@ export default function JobDetailPage() {
         )}
 
         {/* GRID LAYOUT (MAIN + SIDE) */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
 
         {/* LEFT SIDE */}
         <div className="lg:col-span-2 space-y-6">
@@ -164,10 +164,10 @@ export default function JobDetailPage() {
             shadow-[0_6px_20px_rgba(0,0,0,0.04)] 
             hover:shadow-[0_10px_30px_rgba(0,0,0,0.06)] 
             transition-all duration-200">
-            <CardContent className="p-5 space-y-4">
+            <CardContent className="p-4 sm:p-5 space-y-4">
                 <p className="text-sm font-medium">Share Job</p>
 
-                <div className="flex items-center gap-3">
+                <div className="flex flex-wrap items-center gap-2 sm:gap-3">
                 <Button
                     variant="outline"
                     className="rounded-full bg-emerald-600 text-white hover:bg-emerald-700"
@@ -230,7 +230,7 @@ export default function JobDetailPage() {
 
                 return (
                     <>
-                    <div className="flex items-center justify-between">
+                    <div className="flex items-center justify-between gap-2">
                         <p className="text-muted-foreground">Avg Match</p>
                         <p className="font-semibold text-lg">{avgScore}%</p>
                     </div>
@@ -276,7 +276,7 @@ export default function JobDetailPage() {
                 Quick Info
                 </p>
 
-                <div className="grid grid-cols-2 gap-3 text-xs">
+                <div className="grid grid-cols-2 sm:grid-cols-2 gap-2 sm:gap-3 text-xs">
 
                 {/* STATUS */}
                 <div className="bg-zinc-50 rounded-lg px-3 py-2">
@@ -332,7 +332,7 @@ export default function JobDetailPage() {
         {/* DANGER ZONE */}
         <div className="pt-10">
 
-        <div className="flex items-center justify-between 
+        <div className="flex flex-col sm:flex-row gap-3 sm:gap-0 items-start sm:items-center justify-between 
         bg-red-50/50 rounded-2xl px-4 py-3">
 
             <p className="text-xs text-red-600">

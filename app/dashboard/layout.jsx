@@ -40,7 +40,7 @@ export default function DashboardLayout({ children }) {
   return (
     <AuthGuard>
       {/*PREMIUM BACKGROUND */}
-      <div className="min-h-screen flex relative bg-gradient-to-br from-zinc-100 via-white to-emerald-50/30">
+      <div className="h-screen flex relative overflow-hidden bg-gradient-to-br from-zinc-100 via-white to-emerald-50/30">
 
         {/* subtle gradients */}
         <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 via-transparent to-emerald-400/5 pointer-events-none" />
@@ -58,14 +58,14 @@ export default function DashboardLayout({ children }) {
         <aside
           className={`
             fixed md:static z-50
-            ${collapsed ? "w-20" : "w-64"} p-4
+            ${collapsed ? "md:w-20" : "md:w-64"} w-64 p-3 sm:p-4
             transform transition-all duration-300 ease-in-out
             ${open ? "translate-x-0" : "-translate-x-full md:translate-x-0"}
           `}
         >
           <div className="
             sticky top-4
-            h-[calc(100vh-2rem)] rounded-2xl
+            h-[calc(100vh-1rem)] rounded-2xl overflow-hidden
             bg-gradient-to-b from-white to-zinc-50/80 
             backdrop-blur-xl shadow-[0_10px_30px_rgba(0,0,0,0.06)] 
             border border-zinc-200/60
@@ -139,11 +139,11 @@ export default function DashboardLayout({ children }) {
         </aside>
 
         {/* MAIN */}
-        <main className="flex-1 flex flex-col px-4 py-4 relative z-10">
+        <main className="flex-1 flex flex-col px-3 sm:px-4 py-3 sm:py-4 relative z-10 overflow-y-auto">
 
           {/* TOPBAR */}
           <div className="
-            h-16 flex items-center justify-between px-6
+            h-14 sm:h-16 flex items-center justify-between px-3 sm:px-6
             rounded-2xl mb-4
             bg-white/80
             backdrop-blur-xl border border-zinc-200/60 shadow-[0_8px_25px_rgba(0,0,0,0.04)] 
@@ -167,10 +167,10 @@ export default function DashboardLayout({ children }) {
               </button>
 
               <div>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-xs sm:text-sm">
                   Welcome back
                 </p>
-                <p className="font-semibold text-lg">
+                <p className="font-semibold text-base sm:text-lg">
                   {displayName}
                 </p>
               </div>
@@ -179,7 +179,7 @@ export default function DashboardLayout({ children }) {
 
             {/* RIGHT */}
             <Link href="/dashboard/jobs/new">
-              <Button className="rounded-full h-10 px-5 bg-emerald-600 text-white hover:bg-emerald-700 
+              <Button className="rounded-full h-9 sm:h-10 px-3 sm:px-5 text-xs sm:text-sm bg-emerald-600 text-white hover:bg-emerald-700 
               shadow-sm hover:shadow-md transition-all duration-200 ease-in-out">
                 + Create Job
               </Button>
@@ -188,8 +188,8 @@ export default function DashboardLayout({ children }) {
           </div>
 
           {/* CONTENT */}
-          <div className="flex-1 px-6 pb-10 bg-transparent">
-            <div className="max-w-5xl mx-auto w-full">
+          <div className="flex-1 px-2 sm:px-6 pb-6 sm:pb-10 bg-transparent">
+            <div className="w-full max-w-5xl mx-auto">
               {children}
             </div>
           </div>

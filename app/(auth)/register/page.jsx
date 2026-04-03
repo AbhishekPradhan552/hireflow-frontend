@@ -45,22 +45,26 @@ export default function RegisterPage() {
   }
 
   return (
-    <form
+    <div className="w-full max-w-md mx-auto">
+      <form
       onSubmit={handleSubmit}
-      className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500"
+      className="
+        space-y-5 sm:space-y-6
+        animate-in fade-in slide-in-from-bottom-4 duration-500
+      "
     >
 
-      {/* 🔥 HEADER (DIFFERENT FROM LOGIN) */}
+      {/* HEADER */}
       <div className="space-y-1">
-        <h2 className="text-xl font-semibold text-zinc-900">
+        <h2 className="text-lg sm:text-xl font-semibold text-zinc-900">
           Create your account
         </h2>
-        <p className="text-sm text-zinc-500">
+        <p className="text-xs sm:text-sm text-zinc-500">
           Start hiring smarter with AI
         </p>
       </div>
 
-      {/* 🔥 ERROR */}
+      {/* ERROR */}
       {error && (
         <div className="
           text-sm text-red-600
@@ -71,7 +75,7 @@ export default function RegisterPage() {
         </div>
       )}
 
-      {/* 🔥 EMAIL */}
+      {/* EMAIL */}
       <Input
         type="email"
         placeholder="Work email"
@@ -79,7 +83,7 @@ export default function RegisterPage() {
         onChange={(e) => setEmail(e.target.value)}
         required
         className="
-          h-11 rounded-xl
+          h-10 sm:h-11 rounded-xl
           bg-white/80 backdrop-blur
           border border-zinc-200
           focus-visible:ring-2 focus-visible:ring-purple-200
@@ -88,7 +92,7 @@ export default function RegisterPage() {
         "
       />
 
-      {/* 🔥 PASSWORD */}
+      {/* PASSWORD */}
       <div className="relative">
         <Input
           type={showPassword ? "text" : "password"}
@@ -97,7 +101,7 @@ export default function RegisterPage() {
           onChange={(e) => setPassword(e.target.value)}
           required
           className="
-            h-11 rounded-xl pr-12
+            h-10 sm:h-11 rounded-xl pr-12
             bg-white/80 backdrop-blur
             border border-zinc-200
             focus-visible:ring-2 focus-visible:ring-purple-200
@@ -119,63 +123,64 @@ export default function RegisterPage() {
         </button>
       </div>
 
-      {/* 🔥 PASSWORD HINT */}
-      <p className="text-xs text-zinc-500 -mt-3">
+      {/* PASSWORD HINT */}
+      <p className="text-xs text-zinc-500 -mt-2 sm:-mt-3">
         Use at least 6 characters
       </p>
 
+      {/* ROLE */}
       <div className="space-y-3">
-  <p className="text-sm text-zinc-600">Choose your role</p>
+        <p className="text-sm text-zinc-600">Choose your role</p>
 
-  <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
 
-    {/* RECRUITER */}
-    <button
-      type="button"
-      onClick={() => setRole("RECRUITER")}
-      className={`
-        text-left rounded-2xl p-4 border transition-all duration-200
-        ${
-          role === "RECRUITER"
-            ? "border-purple-500 bg-purple-50/70 shadow-[0_8px_25px_rgba(99,102,241,0.15)]"
-            : "border-zinc-200/60 bg-white/70 hover:bg-white hover:shadow-[0_6px_18px_rgba(0,0,0,0.06)]"
-        }
-      `}
-    >
-      <p className="font-medium text-sm text-zinc-800">Recruiter</p>
-      <p className="text-xs text-zinc-500 mt-1">
-        Manage candidates and view jobs
-      </p>
-    </button>
+          {/* RECRUITER */}
+          <button
+            type="button"
+            onClick={() => setRole("RECRUITER")}
+            className={`
+              text-left rounded-2xl p-3 sm:p-4 border transition-all duration-200
+              ${
+                role === "RECRUITER"
+                  ? "border-purple-500 bg-purple-50/70 shadow-[0_8px_25px_rgba(99,102,241,0.15)]"
+                  : "border-zinc-200/60 bg-white/70 hover:bg-white hover:shadow-[0_6px_18px_rgba(0,0,0,0.06)]"
+              }
+            `}
+          >
+            <p className="font-medium text-sm text-zinc-800">Recruiter</p>
+            <p className="text-xs text-zinc-500 mt-1">
+              Manage candidates and view jobs
+            </p>
+          </button>
 
-    {/* VIEWER */}
-    <button
-      type="button"
-      onClick={() => setRole("VIEWER")}
-      className={`
-        text-left rounded-2xl p-4 border transition-all duration-200
-        ${
-          role === "VIEWER"
-            ? "border-purple-500 bg-purple-50/70 shadow-[0_8px_25px_rgba(99,102,241,0.15)]"
-            : "border-zinc-200/60 bg-white/70 hover:bg-white hover:shadow-[0_6px_18px_rgba(0,0,0,0.06)]"
-        }
-      `}
-    >
-      <p className="font-medium text-sm text-zinc-800">Viewer</p>
-      <p className="text-xs text-zinc-500 mt-1">
-        Read-only access to jobs and candidates
-      </p>
-    </button>
+          {/* VIEWER */}
+          <button
+            type="button"
+            onClick={() => setRole("VIEWER")}
+            className={`
+              text-left rounded-2xl p-3 sm:p-4 border transition-all duration-200
+              ${
+                role === "VIEWER"
+                  ? "border-purple-500 bg-purple-50/70 shadow-[0_8px_25px_rgba(99,102,241,0.15)]"
+                  : "border-zinc-200/60 bg-white/70 hover:bg-white hover:shadow-[0_6px_18px_rgba(0,0,0,0.06)]"
+              }
+            `}
+          >
+            <p className="font-medium text-sm text-zinc-800">Viewer</p>
+            <p className="text-xs text-zinc-500 mt-1">
+              Read-only access to jobs and candidates
+            </p>
+          </button>
 
-  </div>
-</div>
+        </div>
+      </div>
 
-      {/* 🔥 CTA */}
+      {/* CTA */}
       <Button
         type="submit"
         disabled={loading}
         className="
-          w-full h-11 rounded-xl font-medium
+          w-full h-10 sm:h-11 rounded-xl font-medium
           bg-gradient-to-r from-purple-600 via-indigo-600 to-blue-600
           bg-[length:200%_100%]
           text-white
@@ -189,7 +194,7 @@ export default function RegisterPage() {
         {loading ? "Creating account..." : "Create account"}
       </Button>
 
-      {/* 🔥 FOOT ACTION */}
+      {/* FOOT */}
       <p className="text-xs text-center text-zinc-500">
         Already have an account?{" "}
         <span
@@ -201,5 +206,7 @@ export default function RegisterPage() {
       </p>
 
     </form>
+  </div>
+    
   );
 }

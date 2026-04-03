@@ -17,7 +17,7 @@ export default function Home() {
 
       {/* 🔥 NAVBAR */}
       <header className="sticky top-0 z-50 backdrop-blur-xl bg-white/70 border-b border-zinc-200/50">
-        <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
           <h1 className="font-semibold text-lg tracking-tight">
             HireFlow
           </h1>
@@ -47,7 +47,7 @@ export default function Home() {
       </header>
 
       {/* 🔥 HERO */}
-      <section className="relative px-6 py-28 text-center overflow-hidden">
+      <section className="relative px-6 py-20 sm:py-24 md:py-28 text-center overflow-hidden">
 
         {/* 💜 GRADIENT GLOW */}
         <div className="absolute inset-0 flex justify-center pointer-events-none">
@@ -68,7 +68,7 @@ export default function Home() {
             all in one streamlined workflow.
           </p>
 
-          <div className="flex justify-center gap-4 pt-4">
+          <div className="flex flex-col sm:flex-row justify-center gap-3 sm:gap-4">
             <Button
               onClick={() => router.push("/register")}
               className="
@@ -92,7 +92,7 @@ export default function Home() {
           </div>
 
           {/* 🧠 FAKE DASHBOARD PREVIEW */}
-          <div className="mt-16 max-w-4xl mx-auto animate-in fade-in slide-in-from-bottom-8 duration-700 delay-200">
+          <div className="mt-12 sm:mt-16 max-w-3xl md:max-w-4xl mx-auto animate-in fade-in slide-in-from-bottom-8 duration-700 delay-200">
             <div className="
               rounded-2xl border border-zinc-200/60 
               bg-white/60 backdrop-blur-xl 
@@ -191,8 +191,9 @@ export default function Home() {
           relative p-6 rounded-xl 
           bg-white/60 backdrop-blur-xl 
           border border-zinc-200/60
-          shadow-sm hover:shadow-lg
-          transition-all duration-300 hover:-translate-y-1
+          shadow-sm 
+          transition-all duration-300 
+          hover:-translate-y-1 hover:shadow-xl
         "
       >
         {/* step number */}
@@ -240,6 +241,71 @@ export default function Home() {
         </Button>
       </section>
 
+      <footer className="border-t border-zinc-200 bg-white/70 backdrop-blur-xl">
+        <div className="max-w-6xl mx-auto px-6 py-12">
+
+          {/* TOP */}
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-10">
+
+            {/* BRAND */}
+            <div className="space-y-3">
+              <h2 className="text-lg font-semibold tracking-tight">
+                HireFlow
+              </h2>
+              <p className="text-sm text-zinc-500 leading-relaxed">
+                AI-powered recruiting platform to streamline hiring,
+                analyze candidates, and make smarter decisions.
+              </p>
+            </div>
+
+            {/* PRODUCT */}
+            <div className="space-y-3">
+              <p className="text-sm font-medium text-zinc-800">Product</p>
+              <ul className="space-y-2 text-sm text-zinc-500">
+                <li className="hover:text-zinc-900 cursor-pointer">Features</li>
+                <li className="hover:text-zinc-900 cursor-pointer">Pricing</li>
+                <li className="hover:text-zinc-900 cursor-pointer">Integrations</li>
+              </ul>
+            </div>
+
+            {/* COMPANY */}
+            <div className="space-y-3">
+              <p className="text-sm font-medium text-zinc-800">Company</p>
+              <ul className="space-y-2 text-sm text-zinc-500">
+                <li className="hover:text-zinc-900 cursor-pointer">About</li>
+                <li className="hover:text-zinc-900 cursor-pointer">Careers</li>
+                <li className="hover:text-zinc-900 cursor-pointer">Contact</li>
+              </ul>
+            </div>
+
+            {/* LEGAL */}
+            <div className="space-y-3">
+              <p className="text-sm font-medium text-zinc-800">Legal</p>
+              <ul className="space-y-2 text-sm text-zinc-500">
+                <li className="hover:text-zinc-900 cursor-pointer">Privacy Policy</li>
+                <li className="hover:text-zinc-900 cursor-pointer">Terms of Service</li>
+              </ul>
+            </div>
+
+          </div>
+
+          {/* BOTTOM */}
+          <div className="mt-10 pt-6 border-t border-zinc-200 flex flex-col sm:flex-row justify-between items-center gap-4">
+
+            <p className="text-xs text-zinc-500">
+              © {new Date().getFullYear()} HireFlow. All rights reserved.
+            </p>
+
+            <div className="flex items-center gap-4 text-sm text-zinc-500">
+              <span className="hover:text-zinc-900 cursor-pointer">Twitter</span>
+              <span className="hover:text-zinc-900 cursor-pointer">LinkedIn</span>
+              <span className="hover:text-zinc-900 cursor-pointer">GitHub</span>
+            </div>
+
+          </div>
+
+        </div>
+      </footer>
     </div>
   );
 }
