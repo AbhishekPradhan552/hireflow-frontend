@@ -56,8 +56,12 @@ export default function CandidateDetailPage() {
           r.aiStatus === "SCORING"
           
       )
+      // ✅ Don't poll in background tabs
+      if (typeof document !== "undefined" && document.visibilityState === "hidden") {
+         return false
+      }
 
-      return pending ? 2000 : false
+      return pending ? 10000 : false
     }
   })
 
