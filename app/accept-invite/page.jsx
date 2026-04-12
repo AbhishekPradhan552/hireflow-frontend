@@ -25,6 +25,7 @@ export default function AcceptInvitePage() {
   const [password, setPassword] = useState("");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isCheckingAuth, setIsCheckingAuth] = useState(true);
+  const [orgName, setOrgName] = useState(null);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -81,13 +82,15 @@ export default function AcceptInvitePage() {
     },
   });
 
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem("user") || "{}");
+    setOrgName(user?.orgName || null);
+  }, []);
+
+
   if (isCheckingAuth) return null;
 
-  const orgName =
-    typeof window !== "undefined"
-        ? JSON.parse(localStorage.getItem("user") || "{}")?.orgName
-        : null;
-
+  
   return (
   <div className="min-h-screen flex flex-col bg-gradient-to-br from-zinc-100 via-white to-emerald-50 relative overflow-hidden">
 
