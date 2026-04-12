@@ -7,6 +7,7 @@ import { usePathname } from "next/navigation"
 import AuthGuard from "@/components/AuthGuard"
 import { LayoutDashboard, Briefcase, CreditCard, Menu } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import InviteModal from "@/components/ui/invite-modal";
 
 export default function DashboardLayout({ children }) {
 
@@ -15,6 +16,7 @@ export default function DashboardLayout({ children }) {
 
   const [open, setOpen] = useState(false)
   const [collapsed, setCollapsed] = useState(false)
+  const [showInvite, setShowInvite] = useState(false);
 
   useEffect(() => {
     const storedUser = localStorage.getItem("user")
@@ -178,12 +180,40 @@ export default function DashboardLayout({ children }) {
             </div>
 
             {/* RIGHT */}
-            <Link href="/dashboard/jobs/new">
-              <Button className="rounded-full h-9 sm:h-10 px-3 sm:px-5 text-xs sm:text-sm bg-emerald-600 text-white hover:bg-emerald-700 
-              shadow-sm hover:shadow-md transition-all duration-200 ease-in-out">
-                + Create Job
-              </Button>
-            </Link>
+            <div className="flex items-center gap-2 flex-wrap">
+
+              {/* Invite Button (ONLY OWNER) */}
+              {user?.role === "OWNER" && (
+                <Button
+                  variant="outline"
+                  className="
+                    h-9 sm:h-10 px-4 sm:px-5 text-xs sm:text-sm font-medium
+                    rounded-full
+                    border border-emerald-200
+                    bg-emerald-50
+                    text-emerald-700
+
+                    hover:bg-emerald-100
+                    shadow-sm hover:shadow-md
+
+                    transition-all duration-200
+                    active:scale-[0.97]
+                  "
+                  onClick={() => setShowInvite(true)}
+                >
+                  Invite
+                </Button>
+              )}
+
+              {/* Existing Create Job Button */}
+              <Link href="/dashboard/jobs/new">
+                <Button className="rounded-full h-9 sm:h-10 px-3 sm:px-5 text-xs sm:text-sm bg-emerald-600 text-white hover:bg-emerald-700 
+                shadow-sm hover:shadow-md transition-all duration-200 ease-in-out">
+                  + Create Job
+                </Button>
+              </Link>
+
+            </div>
 
           </div>
 
@@ -193,6 +223,11 @@ export default function DashboardLayout({ children }) {
               {children}
             </div>
           </div>
+
+          <InviteModal
+              open={showInvite}
+              onClose={() => setShowInvite(false)}
+         />
 
         </main>
 
