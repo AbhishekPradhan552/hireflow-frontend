@@ -2,6 +2,7 @@
 
 export const dynamic = "force-dynamic";
 
+import { Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
@@ -17,7 +18,22 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 
+
 export default function AcceptInvitePage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="h-screen flex items-center justify-center text-sm text-muted-foreground">
+          Loading invite...
+        </div>
+      }
+    >
+      <AcceptInviteContent />
+    </Suspense>
+  );
+}
+
+function AcceptInviteContent() {
   const params = useSearchParams();
   const token = params.get("token");
 
